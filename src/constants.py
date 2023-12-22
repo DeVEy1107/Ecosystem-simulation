@@ -1,0 +1,23 @@
+
+GAME_NAME = "Ecosystem simulation"
+
+MONKEY_IMAGE_PATH = r"images/CuriousMonkeyIdleSide.png"
+WOLF_IMAGE_PATH = r"images/TimberWolfIdleSide.png"
+
+FPS = 30
+
+BACKGROUND = (255, 255, 255)
+
+
+WINDOW_MOVING_SPEED = 20
+
+TILE_SIZE = 32
+
+
+SCREEN_WIDTH = 32 * 40
+SCREEN_HEIGHT = 32 * 30
+
+TIME_INTERVAL = 5
+
+MAP_WIDTH = 50 * TILE_SIZE
+MAP_HEIGHT = 50 * TILE_SIZE
