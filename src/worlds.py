@@ -7,6 +7,8 @@ from constants import *
 from creatures import *
 from tilemap import Tilemap
 
+from tools import debug
+
 class Timer(object):
     def __init__(self, timeInterval):
         self.absTime = 0
@@ -18,28 +20,30 @@ class Timer(object):
         if self.absTime % self.timeInterval == 0:
             self.time += 1
 
-
 class World(object):
     def __init__(self):
         self.timer = Timer(TIME_INTERVAL)
 
+    def init(self):
+        self.terrains = Tilemap(MAP_WIDTH // TILE_SIZE, MAP_HEIGHT // TILE_SIZE)
+        
         self.monkeys = pygame.sprite.Group()
-        self.fruits = pygame.sprite.Group()
+        self.foods = pygame.sprite.Group()
         self.wolfs = pygame.sprite.Group()
 
-        self.terrains = Tilemap(MAP_WIDTH // TILE_SIZE, MAP_HEIGHT // TILE_SIZE)
-       
         self.showInfo = False
-
-    def init(self):
+        self.offset = self.terrains.offset
         self.addMonkeys(20)
-        self.addWolfs(5)
+
 
     def addMonkeys(self, num):
         for _ in range(num):
             self.monkeys.add(
                 Monkey(random.randint(0, MAP_WIDTH), random.randint(0, MAP_HEIGHT))
             )
+
+    def addWolf(self, x, y):
+        self.wolfs.add(Wolf(x, y))
 
     def addWolfs(self, num):
         for _ in range(num):
@@ -49,38 +53,41 @@ class World(object):
 
     def addFoods(self, num):
         for _ in range(num):
-            self.fruits.add(
-                Banana(random.randint(0, MAP_WIDTH), random.randint(0, MAP_HEIGHT))
+            self.foods.add(
+                Food(
+                    random.randint(self.offset[0], MAP_WIDTH-self.offset[0]), 
+                    random.randint(self.offset[1], MAP_HEIGHT-self.offset[1])
+                )
             )
 
     def update(self):
         self.timer.update()
-
         for monkey in self.monkeys:
-            monkey.update()
-            monkey.move()
+            monkey.escape(self.wolfs)
             if not monkey.isMating:
-                monkey.seekingFood(self.fruits)
+                monkey.seekingFood(self.foods)
             if monkey.property.matingDesireLevel >= 100:
                 monkey.reproduce(self.monkeys)
-            monkey.limits(*self.terrains.getOffset())
+            monkey.move()
+            monkey.update()
+            monkey.limits(*self.offset)
 
         for wolf in self.wolfs:
-            wolf.update()
-            wolf.move()
             if not wolf.isMating:
                 wolf.seekingFood(self.monkeys)
             if wolf.property.matingDesireLevel >= 100:
                 wolf.reproduce(self.wolfs)
-            wolf.limits(*self.terrains.getOffset())
+            wolf.move()
+            wolf.update()
+            wolf.limits(*self.offset)
 
         if self.timer.time % 10 == 0:
-            self.addFoods(2)
+            self.addFoods(1)
     
     def draw(self, screen):
         self.terrains.draw(screen)
 
-        self.fruits.draw(screen)
+        self.foods.draw(screen)
 
         for monkey in self.monkeys:
             monkey.showInfo = self.showInfo
@@ -99,8 +106,14 @@ class World(object):
         for wolf in self.wolfs:
             wolf.shift(dx, dy)
 
-        for fruit in self.fruits:
-            fruit.shift(dx, dy)
+        for food in self.foods:
+            food.shift(dx, dy)
+
+        self.offset = self.terrains.offset
 
     def getCurrentTime(self):
         return self.timer.time
+
+    def drawGroupsCount(self):
+        msg = f"Monkeys: {len(self.monkeys)} \nWolfs: {len(self.wolfs)} \nFoods: {len(self.foods)}"
+        debug(msg)

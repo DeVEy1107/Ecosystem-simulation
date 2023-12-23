@@ -9,15 +9,16 @@ from tools import SpriteSheet
 
 
 class Property(object):
-    def __init__(self, hungerLevel=100, thirstLevel=100, speed=2, detectionRange=100, 
+    def __init__(self, hungerLevel=100, speed=2, detectionRange=100, hungerSpeed=5,
                  foodAmount=60, interactiveRange=20, matingDesireLevel=0):
         self.hungerLevel = hungerLevel
-        self.thirstLevel = thirstLevel
         self.speed = speed
+        self.hungerSpeed = hungerSpeed
         self.detectionRange = detectionRange
-        self.interactiveRange = interactiveRange
         self.matingDesireLevel = matingDesireLevel
         self.foodAmount = foodAmount
+        self.interactiveRange = interactiveRange
+
 
 class SpriteAnimaition(object):
     def __init__(self, filepath, size):
@@ -70,17 +71,15 @@ class Creature(pygame.sprite.Sprite):
 
         self.showInfo = False
 
+        self.totalEaten = 0
         self.isMating = False
 
     def move(self):
         self.changeDirectionTimer -= 1
         if self.changeDirectionTimer <= 0:
             self.direction = Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
-            self.changeDirectionTimer = random.randint(30, 60) 
-            self.speed = random.randint(self.property.speed - 1, self.property.speed + 1)
-
-        self.position += self.direction * self.speed
-        self.rect.center = self.position
+            self.changeDirectionTimer = random.randint(10, 30) 
+            self.speed = self.property.speed
         
     def reproduce(self, mates):
         targetMate = None
@@ -88,11 +87,10 @@ class Creature(pygame.sprite.Sprite):
             distance = self.position.distance_to(mate.position)
             if mate is not self and distance < self.property.detectionRange \
                 and mate.property.matingDesireLevel >= 100:
-                self.speed = 1
                 self.isMating = True
-                self.ismove = False
+                self.speed = 1
                 self.direction = Vector2((mate.position - self.position)).normalize()
-                targetMate = mate 
+                targetMate = mate   
                 break
 
         if targetMate is not None and distance < self.property.interactiveRange:
@@ -101,22 +99,28 @@ class Creature(pygame.sprite.Sprite):
             newPosition = self.position if random.randint(0, 1) == 0 else mate.position
 
             newCreature = Creature(newPosition.x, newPosition.y, self.filepath)
+        
             mates.add(newCreature)
 
-            self.property.matingDesireLevel = 0
             self.isMating = False
-            self.ismove = True
+            self.property.matingDesireLevel = 0
+            mate.property.matingDesireLevel = 0
 
     def seekingFood(self, foods):
         for food in foods:
             distance = self.position.distance_to(food.position)
             if distance < self.property.detectionRange:
-                self.speed = 4
+                self.speed = 3
                 self.direction = Vector2((food.position - self.position)).normalize()
             
+                self.position += self.direction * self.speed
+                self.rect.center = self.position
+
             if distance < self.property.interactiveRange:
                 self.property.hungerLevel += food.property.foodAmount
                 food.kill()
+                self.totalEaten += 1
+
 
     def limits(self, x0, y0):
         self.rect.x = max(x0, min(self.rect.x, MAP_WIDTH + x0 - int(self.size)))
@@ -124,14 +128,13 @@ class Creature(pygame.sprite.Sprite):
 
     def propertyUpdate(self):
         if self.timeCounter % 20 == 0:
-            self.property.hungerLevel -= self.property.speed
-            self.property.thirstLevel -= 2
+            self.property.hungerLevel -= self.property.hungerSpeed
             if self.property.matingDesireLevel < 100:
                 self.property.matingDesireLevel += random.randint(5, 10) 
             else:
                 self.property.matingDesireLevel = 100 
 
-        if self.property.hungerLevel < 0 or self.property.thirstLevel < 0:
+        if self.property.hungerLevel < 0:
             self.kill()
 
 
@@ -140,9 +143,12 @@ class Creature(pygame.sprite.Sprite):
 
         self.timeCounter += 1
         self.propertyUpdate()
+ 
+        self.position += self.direction * self.speed
+        self.rect.center = self.position
 
-        msg = "Velocity: {} \nHungerLevel: {} \nThirstLevel: {} \nMatingDesireLevel: {} \n ".format(
-            self.speed, self.property.hungerLevel, self.property.thirstLevel, self.property.matingDesireLevel
+        msg = "Velocity: {} \nHungerLevel: {} \nMatingDesireLevel: {} \nTotalEaten: {}".format(
+            self.speed, self.property.hungerLevel, self.property.matingDesireLevel, self.totalEaten
         )
         self.infoLabel.update(msg)
 
@@ -186,7 +192,7 @@ class Creature(pygame.sprite.Sprite):
 class Label:
     def __init__(self, font_size):
         self.font = pygame.font.Font(None, font_size)
-        self.text_surface = pygame.Surface((60, 60))
+        self.text_surface = pygame.Surface((60, 60), pygame.SRCALPHA)
 
     def update(self, msg):
         self.text_surface = self.font.render(
@@ -197,7 +203,7 @@ class Label:
     def draw(self, screen, x, y):
         screen.blit(self.text_surface, (x, y))
 
-class Banana(pygame.sprite.Sprite):
+class Food(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.property = Property(foodAmount=30)
@@ -208,6 +214,13 @@ class Banana(pygame.sprite.Sprite):
             self.image, (255, 255, 0), (int(TILE_SIZE // 2), int(TILE_SIZE // 2)), 
             TILE_SIZE // 6
         )
+        self.timeCounter = 0
+
+    def update(self):
+        self.timeCounter += 1
+        if self.timeCounter % 200 == 0:
+            self.kill()
+    
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
 
@@ -217,7 +230,8 @@ class Banana(pygame.sprite.Sprite):
 
         self.position.x = self.rect.centerx 
         self.position.y = self.rect.centery
-    
+
+
 class Monkey(Creature):
     def __init__(self, x, y):
         super().__init__(x, y, MONKEY_IMAGE_PATH)
@@ -228,17 +242,71 @@ class Monkey(Creature):
             detectionRange=100,
             foodAmount=60
         )
+        
+    def escape(self, predators):
+        for predator in predators:
+            distance = self.position.distance_to(predator.position)
+            if distance <= self.property.detectionRange:
+                self.speed = 1.8 * self.property.speed
+                self.direction = (self.position - predator.position).normalize()
+
+    def reproduce(self, mates):
+        targetMate = None
+        for mate in mates:
+            distance = self.position.distance_to(mate.position)
+            if mate is not self and distance < self.property.detectionRange \
+                and mate.property.matingDesireLevel >= 100:
+                self.isMating = True
+                self.speed = 1
+                self.direction = Vector2((mate.position - self.position)).normalize()
+                targetMate = mate   
+                break
+
+        if targetMate is not None and distance < self.property.interactiveRange:
+            self.speed = 0
+
+            newPosition = self.position if random.randint(0, 1) == 0 else mate.position
+
+            newCreature = Monkey(newPosition.x, newPosition.y)
+        
+            mates.add(newCreature)
+
+            self.isMating = False
+            self.property.matingDesireLevel = 0
+            mate.property.matingDesireLevel = 0
 
 class Wolf(Creature):
     def __init__(self, x, y):
         super().__init__(x, y, WOLF_IMAGE_PATH)
 
         self.property = Property(
-            hungerLevel=200,
+            hungerLevel=1000,
             speed=3,
-            detectionRange=120
+            detectionRange=170
         )
 
+    def reproduce(self, mates):
+        targetMate = None
+        for mate in mates:
+            distance = self.position.distance_to(mate.position)
+            if mate is not self and distance < self.property.detectionRange \
+                and mate.property.matingDesireLevel >= 100:
+                self.isMating = True
+                self.speed = 1
+                self.direction = Vector2((mate.position - self.position)).normalize()
+                targetMate = mate   
+                break
 
-    
+        if targetMate is not None and distance < self.property.interactiveRange:
+            self.speed = 0
+
+            newPosition = self.position if random.randint(0, 1) == 0 else mate.position
+
+            newCreature = Wolf(newPosition.x, newPosition.y)
+        
+            mates.add(newCreature)
+
+            self.isMating = False
+            self.property.matingDesireLevel = 0
+            mate.property.matingDesireLevel = 0
     

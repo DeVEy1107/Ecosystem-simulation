@@ -89,7 +89,5 @@ class Tilemap(object):
         self.offset[0] += dx
         self.offset[1] += dy
 
-    def getOffset(self):
-        return self.offset
 
                 

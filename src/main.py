@@ -20,6 +20,8 @@ class Game(object):
         self.world = World()
         self.world.init()
 
+        self.showGroups = False
+
     def processEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,6 +35,15 @@ class Game(object):
                     self.world.showInfo = not self.world.showInfo
                 if event.key == pygame.K_p:
                     self.isPaused = not self.isPaused
+                if event.key == pygame.K_r:
+                    self.world.init()
+                if event.key == pygame.K_TAB:
+                    self.showGroups = not self.showGroups
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.world.addWolf(*pygame.mouse.get_pos())
+    
+        pygame.mouse.get_focused()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
@@ -46,19 +57,21 @@ class Game(object):
 
     def update(self):
         self.world.update()
-
+        
+            
     def draw(self, screen):
         screen.fill(BACKGROUND)     
         self.world.draw(screen)
-    
+
     def run(self):
         while self.isRunning:
             self.processEvents()
-            
             if not self.isPaused:
                 self.update()
-
+            
             self.draw(self.screen)
+            if self.showGroups:
+                self.world.drawGroupsCount()
             self.clock.tick(FPS)
 
             pygame.display.flip()
