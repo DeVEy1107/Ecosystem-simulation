@@ -92,7 +92,7 @@ b3(繁殖)
 
   ![](images/readme/monkey.png)
 
-  - 猴子的行為決策樹
+  - 猴子的行為決策
 
   ```mermaid
   flowchart TD
@@ -128,7 +128,7 @@ b3(繁殖)
   ![](images/readme/wolf.png)
 
 
-- 狼的行為決策樹
+- 狼的行為決策
   ```mermaid
   flowchart TD
   t1(偵測範圍) 
