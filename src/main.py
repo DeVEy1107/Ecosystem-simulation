@@ -41,9 +41,11 @@ class Game(object):
                     self.showGroups = not self.showGroups
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                self.world.addWolf(*pygame.mouse.get_pos())
-    
-        pygame.mouse.get_focused()
+                mouseKeys = pygame.mouse.get_pressed()
+                if mouseKeys[0]:
+                    self.world.addWolf(*pygame.mouse.get_pos())
+                elif mouseKeys[2]:
+                    self.world.addMonkey(*pygame.mouse.get_pos())
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:

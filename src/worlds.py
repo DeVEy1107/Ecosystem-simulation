@@ -33,9 +33,11 @@ class World(object):
 
         self.showInfo = False
         self.offset = self.terrains.offset
-        self.addMonkeys(20)
+        # self.addMonkeys(20)
 
-
+    def addMonkey(self, x, y):
+        self.monkeys.add(Monkey(x, y))
+        
     def addMonkeys(self, num):
         for _ in range(num):
             self.monkeys.add(
@@ -55,29 +57,29 @@ class World(object):
         for _ in range(num):
             self.foods.add(
                 Food(
-                    random.randint(self.offset[0], MAP_WIDTH-self.offset[0]), 
-                    random.randint(self.offset[1], MAP_HEIGHT-self.offset[1])
+                    random.randint(self.offset[0], MAP_WIDTH-TILE_SIZE+self.offset[0]), 
+                    random.randint(self.offset[1], MAP_HEIGHT-TILE_SIZE+self.offset[1])
                 )
             )
 
     def update(self):
         self.timer.update()
         for monkey in self.monkeys:
-            monkey.escape(self.wolfs)
-            if not monkey.isMating:
-                monkey.seekingFood(self.foods)
-            if monkey.property.matingDesireLevel >= 100:
-                monkey.reproduce(self.monkeys)
             monkey.move()
+            monkey.seekingFood(self.foods)
+            if monkey.property.matingDesireLevel >= monkey.property.matingDesireThreshold:
+                monkey.reproduce(self.monkeys)
+            monkey.escape(self.wolfs)
+            monkey.detectTerrain(self.terrains.waterTiles)
             monkey.update()
             monkey.limits(*self.offset)
 
         for wolf in self.wolfs:
-            if not wolf.isMating:
-                wolf.seekingFood(self.monkeys)
-            if wolf.property.matingDesireLevel >= 100:
-                wolf.reproduce(self.wolfs)
             wolf.move()
+            wolf.seekingFood(self.monkeys)
+            if wolf.property.matingDesireLevel >= wolf.property.matingDesireThreshold:
+                wolf.reproduce(self.wolfs)
+            wolf.detectTerrain(self.terrains.waterTiles)
             wolf.update()
             wolf.limits(*self.offset)
 
@@ -100,6 +102,7 @@ class World(object):
 
     def shift(self, dx, dy):
         self.terrains.shift(dx, dy)
+
         for monkey in self.monkeys:
             monkey.shift(dx, dy)
         

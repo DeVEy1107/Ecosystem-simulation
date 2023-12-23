@@ -1,4 +1,3 @@
-import numpy as np
 import pygame
 
 from tools import NoiseGenerator, SpriteSheet
@@ -43,7 +42,9 @@ class Tilemap(object):
 
         self.tileset = Tileset()
 
-        self.worldMap = pygame.sprite.Group()
+        self.landTiles = pygame.sprite.Group()
+
+        self.waterTiles = pygame.sprite.Group()
 
         self.noise = NoiseGenerator()
 
@@ -57,21 +58,21 @@ class Tilemap(object):
         for y in range(height):
             for x in range(width):
                 if noise2d[y][x] < 0.3:
-                    self.worldMap.add(
+                    self.waterTiles.add(
                         Tile(
                             int(TILE_SIZE*x), int(TILE_SIZE*y), 
                             self.tileset.getTileImage("water")
                         )
                     )
                 elif noise2d[y][x] >= 0.3 and noise2d[y][x] < 0.35:
-                    self.worldMap.add(
+                    self.landTiles.add(
                         Tile(
                             int(TILE_SIZE*x), int(TILE_SIZE*y), 
                             self.tileset.getTileImage("sand1")
                         )
                     )
                 elif noise2d[y][x] > 0.35:
-                    self.worldMap.add(
+                    self.landTiles.add(
                         Tile(
                             int(TILE_SIZE*x), int(TILE_SIZE*y), 
                             self.tileset.getTileImage("grass1")
@@ -79,10 +80,16 @@ class Tilemap(object):
                     )
 
     def draw(self, screen):
-        self.worldMap.draw(screen)
+        self.landTiles.draw(screen)
+        self.waterTiles.draw(screen)
+
 
     def shift(self, dx, dy):
-        for tile in self.worldMap:
+        for tile in self.landTiles:
+            tile.rect.x += dx
+            tile.rect.y += dy
+
+        for tile in self.waterTiles:
             tile.rect.x += dx
             tile.rect.y += dy
 

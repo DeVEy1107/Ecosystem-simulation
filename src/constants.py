@@ -3,6 +3,7 @@ GAME_NAME = "Ecosystem simulation"
 
 MONKEY_IMAGE_PATH = r"images/CuriousMonkeyIdleSide.png"
 WOLF_IMAGE_PATH = r"images/TimberWolfIdleSide.png"
+FRUIT_IMAGE_PATH = r"images/fruits.png"
 
 FPS = 30
 
@@ -18,5 +19,5 @@ SCREEN_HEIGHT = 900
 
 TIME_INTERVAL = 5
 
-MAP_WIDTH = 50 * TILE_SIZE
+MAP_WIDTH = 60 * TILE_SIZE
 MAP_HEIGHT = 50 * TILE_SIZE

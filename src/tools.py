@@ -5,7 +5,6 @@ import pygame
 
 from perlin_noise import PerlinNoise
 
-
 class SpriteSheet(object):
     def __init__(self, filePath):
         self.sheet = pygame.image.load(filePath)
