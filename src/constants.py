@@ -1,10 +1,10 @@
 
 GAME_NAME = "Ecosystem simulation"
 
-TILE_IMAGE_PATH = r"images/tilesheet.png"
-SHEEP_IMAGE_PATH = r"images/PasturingSheepIdleSide.png"
-WOLF_IMAGE_PATH = r"images/TimberWolfIdleSide.png"
-GRASS_IMAGE_PATH = r"images/Grass.png"
+TILE_IMAGE_PATH = r"images/asset/tilesheet.png"
+SHEEP_IMAGE_PATH = r"images/asset/sheep.png"
+WOLF_IMAGE_PATH = r"images/asset/wolf.png"
+GRASS_IMAGE_PATH = r"images/asset/grass.png"
 
 FPS = 30
 
@@ -12,7 +12,7 @@ BACKGROUND = (255, 255, 255)
 
 WINDOW_MOVING_SPEED = 20
 
-TILE_SIZE = 64
+TILE_SIZE = 32
 
 SCREEN_WIDTH = 1600
 SCREEN_HEIGHT = 900
