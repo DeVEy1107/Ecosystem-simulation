@@ -50,6 +50,7 @@ class SheepFlock(Flock):
             sheep.draw(screen)
             if self.showInfo:
                 sheep.infoLabel.draw(screen)
+            sheep.infoLabel.drawInfo(screen)
   
     def randSpawn(self, num):
         for _ in range(num):

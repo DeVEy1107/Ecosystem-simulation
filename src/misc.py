@@ -76,6 +76,10 @@ class SpriteInfoLabel(object):
         self.drawDetectionRange(screen)
         screen.blit(self.textSurface, (self.sprite.rect.x, self.sprite.rect.y - 60))
 
+    def drawInfo(self, screen):
+        if self.isMouseOver():
+            screen.blit(self.textSurface, (self.sprite.rect.x, self.sprite.rect.y - 60))
+
     def drawDetectionRange(self, screen):
         pygame.draw.circle(
             screen, (0, 255, 0), self.sprite.rect.center, 
@@ -92,3 +96,7 @@ class SpriteInfoLabel(object):
         pygame.draw.rect(
             screen, (255, 0, 0), self.sprite.rect, width=2
         )
+    
+    def isMouseOver(self):
+        mouseX, mouseY = pygame.mouse.get_pos()
+        return self.sprite.rect.collidepoint(mouseX, mouseY)
