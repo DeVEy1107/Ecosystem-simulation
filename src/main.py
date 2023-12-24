@@ -5,6 +5,7 @@ import pygame
 from constants import *
 from worlds import World
 
+
 class Game(object):
     def __init__(self):
         pygame.init()
@@ -19,7 +20,7 @@ class Game(object):
 
         self.world = World()
 
-        self.showGroups = False
+        self.showFlocks = False
 
     def processEvents(self):
         for event in pygame.event.get():
@@ -38,7 +39,13 @@ class Game(object):
                 if event.key == pygame.K_r:
                     self.world.init()
                 if event.key == pygame.K_TAB:
-                    self.showGroups = not self.showGroups
+                    self.showFlocks = not self.showFlocks
+                if event.key == pygame.K_z:
+                    if self.world.timer.timeInterval > 1:
+                        self.world.timer.timeInterval -= 1 
+                if event.key == pygame.K_x:
+                    if self.world.timer.timeInterval <= 30:
+                        self.world.timer.timeInterval += 1 
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseKeys = pygame.mouse.get_pressed()
@@ -71,8 +78,8 @@ class Game(object):
                 self.update()
             
             self.draw(self.screen)
-            if self.showGroups:
-                self.world.drawGroupsCount()
+            if self.showFlocks:
+                self.world.drawFlocksCount()
             self.clock.tick(FPS)
 
             pygame.display.flip()

@@ -2,6 +2,23 @@ import pygame
 
 from constants import *
 
+class Timer(object):
+    def __init__(self, timeInterval):
+        self.absTime = 0
+        self.time = 0
+        self.timeInterval = timeInterval
+
+    def update(self):
+        self.absTime += 1
+        if self.tick():
+            self.time += 1
+    
+    def setTimeInterval(self, timeInterval):
+        self.timeInterval = timeInterval
+
+    def tick(self):
+        return bool(self.absTime % self.timeInterval == 0)
+
 class SpriteSheet(object):
     def __init__(self, filePath):
         self.sheet = pygame.image.load(filePath)

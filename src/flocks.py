@@ -19,6 +19,10 @@ class Flock(object):
     def displayInfo(self):
         self.showInfo = not self.showInfo
 
+    def setTimeInterval(self, timeInterval):
+        for sprite in self.flock:
+            sprite.timer.setTimeInterval(timeInterval)
+
     def update(self, *args, **kwargs):
         pass
 
@@ -47,6 +51,12 @@ class SheepFlock(Flock):
             if self.showInfo:
                 sheep.infoLabel.draw(screen)
   
+    def randSpawn(self, num):
+        for _ in range(num):
+            x = random.randint(0, MAP_WIDTH - TILE_SIZE)
+            y = random.randint(0, MAP_HEIGHT - TILE_SIZE)
+            self.flock.add(Sheep(x, y))
+
 class WolfFlock(Flock):
     def __init__(self):
         super().__init__()
@@ -65,7 +75,13 @@ class WolfFlock(Flock):
             wolf.draw(screen)
             if self.showInfo:
                 wolf.infoLabel.draw(screen)
-            
+
+    def randSpawn(self, num):
+        for _ in range(num):
+            x = random.randint(0, MAP_WIDTH - TILE_SIZE)
+            y = random.randint(0, MAP_HEIGHT - TILE_SIZE)
+            self.flock.add(Wolf(x, y))
+
 class GrassFlock(Flock):
     def __init__(self, grassCoords):
         super().__init__()

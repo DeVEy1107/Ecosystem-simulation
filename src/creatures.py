@@ -5,7 +5,7 @@ import pygame
 from pygame import Vector2
 
 from constants import *
-from misc import SpriteSheet, SpriteAnimaition, SpriteInfoLabel
+from misc import Timer, SpriteSheet, SpriteAnimaition, SpriteInfoLabel
 
 class Property(object):
     def __init__(self, 
@@ -41,6 +41,7 @@ class Creature(pygame.sprite.Sprite):
         self.rect = self.spriteAnimation.getImage().get_rect(topleft=(x, y))
 
         self.timeCounter = 0
+        self.timer = Timer(TIME_INTERVAL)
 
         self.position = Vector2(self.rect.centerx, self.rect.centery)
         self.direction = Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
@@ -53,6 +54,13 @@ class Creature(pygame.sprite.Sprite):
         self.infoLabel = SpriteInfoLabel(self)
 
         self.totalEaten = 0
+
+    def avoidZeroVector(self, position1, position2):
+        distance = position1.distance_to(position2)
+        if distance == 0:
+            return Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
+        else:
+            return Vector2((position1 - position2)).normalize()
 
     def move(self):
         self.changeDirectionTimer -= 1
@@ -68,7 +76,7 @@ class Creature(pygame.sprite.Sprite):
             if mate is not self and distance < self.property.detectionRange \
                 and mate.property.matingDesireLevel >= 100:
                 self.speed = 1
-                self.direction = Vector2((mate.position - self.position)).normalize()
+                self.direction = self.avoidZeroVector(mate.position, self.position)
                 targetMate = mate   
                 break
 
@@ -89,7 +97,7 @@ class Creature(pygame.sprite.Sprite):
             distance = self.position.distance_to(food.position)
             if distance < self.property.detectionRange:
                 self.speed = self.property.towarfFoodSpeed
-                self.direction = Vector2((food.position - self.position)).normalize()
+                self.direction = self.avoidZeroVector(food.position, self.position)
 
             if distance < self.property.interactiveRange:
                 self.property.hungerLevel += food.property.foodAmount
@@ -107,7 +115,7 @@ class Creature(pygame.sprite.Sprite):
         self.rect.y = max(y0, min(self.rect.y, MAP_HEIGHT + y0 - int(self.size)))   
 
     def propertyUpdate(self):
-        if self.timeCounter % 20 == 0:
+        if self.timer.time % CREATURE_PROPERTY_UPDATE_TIME == 0:
             self.property.hungerLevel -= self.property.hungerSpeed
             if self.property.matingDesireLevel < 100:
                 self.property.matingDesireLevel += self.property.matingDesireSpeed
@@ -119,26 +127,6 @@ class Creature(pygame.sprite.Sprite):
 
     def draw(self, screen):
         screen.blit(self.spriteAnimation.getImage(), self.rect)
-
-    def drawProperty(self, screen):
-        self.infoLabel.draw(screen, self.rect.x, self.rect.y - 60)
-
-    def drawDetectionRange(self, screen):
-        pygame.draw.circle(
-            screen, (0, 255, 0), self.rect.center, 
-            self.property.detectionRange, width=2
-        )
-
-    def drawInteractiveRange(self, screen):
-        pygame.draw.circle(
-            screen, (255, 255, 0), self.rect.center,
-            self.property.interactiveRange, width=2
-        )
-   
-    def drawBBox(self, screen):
-        pygame.draw.rect(
-            screen, (255, 0, 0), self.rect, width=2
-        )
 
     def shift(self, dx, dy):
         self.rect.x += dx
@@ -157,13 +145,13 @@ class Grass(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (int(TILE_SIZE), int(TILE_SIZE)))
         self.rect = self.image.get_rect(topleft=(x, y))
         self.position = Vector2(self.rect.centerx, self.rect.centery)
-        self.timeCounter = 0
+        self.timer = Timer(TIME_INTERVAL)
 
     def update(self):
-        self.timeCounter += 1
-        if self.timeCounter % 200 == 0:
+        if self.timer.time % 30 == 0:
             self.kill()
-    
+        self.timer.update()
+
     def draw(self, screen): 
         screen.blit(self.image, self.rect)
 
@@ -182,6 +170,7 @@ class Sheep(Creature):
         self.property = Property(
             hungerLevel=100, 
             speed=2,
+            matingDesireThreshold=500,
             detectionRange=100,
             foodAmount=60,
             towardFoodSpeed=2.5
@@ -192,24 +181,25 @@ class Sheep(Creature):
             distance = self.position.distance_to(predator.position)
             if distance <= self.property.detectionRange:
                 self.speed = 1.8 * self.property.speed
-                self.direction = Vector2((self.position - predator.position)).normalize()
+                self.direction = self.avoidZeroVector(self.position, predator.position)
 
     def update(self, foods, mates, predators, terrains):
         self.spriteAnimation.update()
 
-        self.move()
-        self.seekingFood(foods)
-        if self.property.matingDesireLevel >= self.property.matingDesireThreshold:
-            self.reproduce(mates)
-        self.escape(predators)
-        self.detectTerrain(terrains.waterTiles)
+        if self.timer.tick():
+            self.move()
+            self.seekingFood(foods)
+            if self.property.matingDesireLevel >= self.property.matingDesireThreshold:
+                self.reproduce(mates)
+            self.escape(predators)
+            self.detectTerrain(terrains.waterTiles)
 
-        self.position += self.direction * self.speed
-        self.rect.center = self.position
+            self.position += self.direction * self.speed
+            self.rect.center = self.position
 
-        self.propertyUpdate()
-        self.timeCounter += 1
+            self.propertyUpdate()
 
+        self.timer.update()
         self.infoLabel.update()
         
 
@@ -227,16 +217,17 @@ class Wolf(Creature):
     def update(self, foods, mates, terrains):
         self.spriteAnimation.update()
 
-        self.move()
-        self.seekingFood(foods)
-        if self.property.matingDesireLevel >= self.property.matingDesireThreshold:
-            self.reproduce(mates)
-        self.detectTerrain(terrains.waterTiles)
+        if self.timer.tick():
+            self.move()
+            self.seekingFood(foods)
+            if self.property.matingDesireLevel >= self.property.matingDesireThreshold:
+                self.reproduce(mates)
+            self.detectTerrain(terrains.waterTiles)
 
-        self.position += self.direction * self.speed
-        self.rect.center = self.position
+            self.position += self.direction * self.speed
+            self.rect.center = self.position
 
-        self.propertyUpdate()
-        self.timeCounter += 1
+            self.propertyUpdate()
 
+        self.timer.update()
         self.infoLabel.update()
