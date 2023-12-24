@@ -1,9 +1,10 @@
 
 GAME_NAME = "Ecosystem simulation"
 
-MONKEY_IMAGE_PATH = r"images/CuriousMonkeyIdleSide.png"
+TILE_IMAGE_PATH = r"images/tilesheet.png"
+SHEEP_IMAGE_PATH = r"images/PasturingSheepIdleSide.png"
 WOLF_IMAGE_PATH = r"images/TimberWolfIdleSide.png"
-FRUIT_IMAGE_PATH = r"images/fruits.png"
+GRASS_IMAGE_PATH = r"images/Grass.png"
 
 FPS = 30
 

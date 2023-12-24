@@ -58,7 +58,6 @@ class Creature(pygame.sprite.Sprite):
         self.size = TILE_SIZE
         self.filepath = filepath
         self.spriteAnimation = SpriteAnimaition(filepath, self.size)
-
         self.rect = self.spriteAnimation.getImage().get_rect(topleft=(x, y))
 
         self.timeCounter = 0
@@ -72,8 +71,6 @@ class Creature(pygame.sprite.Sprite):
         self.changeDirectionTimer = random.randint(30, 60)
 
         self.infoLabel = Label(20)
-
-        self.showInfo = False
 
         self.totalEaten = 0
 
@@ -129,20 +126,19 @@ class Creature(pygame.sprite.Sprite):
 
         self.position += self.direction * self.speed
         self.rect.center = self.position
-        self.speedFactor = 1.0
 
         msg = "Velocity: {} \nHungerLevel: {} \nMatingDesireLevel: {} \nTotalEaten: {}".format(
             self.speed, self.property.hungerLevel, self.property.matingDesireLevel, self.totalEaten
         )
         self.infoLabel.update(msg)
 
-    def draw(self, screen):
-        if self.showInfo:
-            self.drawDetectionRange(screen)
-            self.drawInteractiveRange(screen)
-            self.drawProperty(screen)
-            self.drawBBox(screen)
+    def drawInfo(self, screen):
+        self.drawDetectionRange(screen)
+        self.drawInteractiveRange(screen)
+        self.drawProperty(screen)
+        self.drawBBox(screen)
 
+    def draw(self, screen):
         screen.blit(self.spriteAnimation.getImage(), self.rect)
 
     def drawProperty(self, screen):
@@ -187,12 +183,12 @@ class Label:
     def draw(self, screen, x, y):
         screen.blit(self.text_surface, (x, y))
 
-class Food(pygame.sprite.Sprite):
+class Grass(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.property = Property(foodAmount=30)
-        self.spriteSheet = SpriteSheet(FRUIT_IMAGE_PATH)
-        self.image = self.spriteSheet.imageAt((38, 9, 16, 16))
+        self.spriteSheet = SpriteSheet(GRASS_IMAGE_PATH)
+        self.image = self.spriteSheet.imageAt((80, 112, 16, 16))
         self.image = pygame.transform.scale(self.image, (int(TILE_SIZE), int(TILE_SIZE)))
         self.rect = self.image.get_rect(topleft=(x, y))
         self.position = Vector2(self.rect.centerx, self.rect.centery)
@@ -214,9 +210,9 @@ class Food(pygame.sprite.Sprite):
         self.position.y = self.rect.centery
 
 
-class Monkey(Creature):
+class Sheep(Creature):
     def __init__(self, x, y):
-        super().__init__(x, y, MONKEY_IMAGE_PATH)
+        super().__init__(x, y, SHEEP_IMAGE_PATH)
 
         self.property = Property(
             hungerLevel=100, 
@@ -249,7 +245,7 @@ class Monkey(Creature):
 
             newPosition = self.position if random.randint(0, 1) == 0 else mate.position
 
-            newCreature = Monkey(newPosition.x, newPosition.y)
+            newCreature = Sheep(newPosition.x, newPosition.y)
         
             mates.add(newCreature)
 

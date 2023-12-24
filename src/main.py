@@ -32,7 +32,8 @@ class Game(object):
                     pygame.quit()
                     sys.exit()
                 if event.key == pygame.K_s:
-                    self.world.showInfo = not self.world.showInfo
+                    self.world.wolfs.displayInfo()
+                    self.world.sheep.displayInfo()
                 if event.key == pygame.K_p:
                     self.isPaused = not self.isPaused
                 if event.key == pygame.K_r:
@@ -43,9 +44,9 @@ class Game(object):
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseKeys = pygame.mouse.get_pressed()
                 if mouseKeys[0]:
-                    self.world.addWolf(*pygame.mouse.get_pos())
+                    self.world.wolfs.add(*pygame.mouse.get_pos())
                 elif mouseKeys[2]:
-                    self.world.addMonkey(*pygame.mouse.get_pos())
+                    self.world.sheep.add(*pygame.mouse.get_pos())
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
@@ -59,8 +60,7 @@ class Game(object):
 
     def update(self):
         self.world.update()
-        
-            
+              
     def draw(self, screen):
         screen.fill(BACKGROUND)     
         self.world.draw(screen)
