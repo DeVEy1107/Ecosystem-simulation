@@ -5,17 +5,6 @@ import pygame
 
 from perlin_noise import PerlinNoise
 
-class SpriteSheet(object):
-    def __init__(self, filePath):
-        self.sheet = pygame.image.load(filePath)
-
-    def imageAt(self, rectangle):
-        rect = pygame.Rect(rectangle)
-        image = pygame.Surface(rect.size, pygame.SRCALPHA, 32).convert_alpha()
-        image.blit(self.sheet, (0, 0), rect)
-
-        return image
-
 class NoiseGenerator(object):
     def __init__(self, seed=0):
         

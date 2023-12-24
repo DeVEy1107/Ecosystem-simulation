@@ -36,11 +36,11 @@
 
 ### ``糧食``
 
-- 香蕉
+- 牧草
 
-    在地圖上任何位置會隨時間隨機生成一定數量的香蕉給猴子吃
+    在地圖上任何位置會隨時間隨機生長一定數量的牧草給綿羊吃
 
-  ![](images/readme/banna.png)
+  ![](images/readme/grass.png)
 
 ### ``生物``
 
@@ -56,9 +56,10 @@
 - matingDesireSpeed: matingDesireLevel的增長隨時間增加的變化量
 - matingDesireThreshold: matingDesireLevel可以進行繁殖的閾值
 - speed: 生物的移動速度
-- towarfFoodSpeed: 朝向食物的移動速度
 - detectionRange: 偵測週邊生物的範圍
 - interactiveRange: 開始進行覓食、繁殖的互動範圍
+- towarfFoodSpeed: 朝向食物的移動速度
+
 
 #### - 生物基礎行為方法
 
@@ -77,9 +78,9 @@ b3(繁殖)
 - 繁殖: 符合繁殖條件時進行繁殖，誕生新生命
 
 #### - 生物種類
-- **猴子**
+- **綿羊**
   
-  以香蕉為覓食的對象，其可執行的行為多了"逃跑"，偵測到狩獵者則開始逃離狩獵者
+  以牧草為食的動物，其可執行的行為多了"逃跑"，偵測到狩獵者載周圍時則開始逃離狩獵者
 
   ```mermaid
   flowchart
@@ -90,9 +91,9 @@ b3(繁殖)
   b4(逃跑)
   ```
 
-  ![](images/readme/monkey.png)
+  ![](images/readme/sheep.png)
 
-  - 猴子的行為決策
+  - 綿羊的行為決策
 
   ```mermaid
   flowchart TD

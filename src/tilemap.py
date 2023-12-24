@@ -1,6 +1,7 @@
 import pygame
 
-from tools import NoiseGenerator, SpriteSheet
+from tools import NoiseGenerator
+from misc import SpriteSheet
 from constants import *
 
 tileTypes = {
@@ -39,7 +40,7 @@ class Tilemap(object):
         self.width, self.height = width, height
 
         self.tileset = Tileset()
-
+        
         self.grassCoords = [] 
 
         self.landTiles = pygame.sprite.Group()
@@ -57,7 +58,6 @@ class Tilemap(object):
         for y in range(height):
             for x in range(width):
                 if noise2d[y][x] < 0.3:
-                    self.grassCoords.append((x, y))
                     self.waterTiles.add(
                         Tile(
                             int(TILE_SIZE*x), int(TILE_SIZE*y), 
@@ -65,7 +65,6 @@ class Tilemap(object):
                         )
                     )
                 elif noise2d[y][x] >= 0.3 and noise2d[y][x] < 0.35:
-                    self.grassCoords.append((x, y))
                     self.landTiles.add(
                         Tile(
                             int(TILE_SIZE*x), int(TILE_SIZE*y), 

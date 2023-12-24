@@ -18,7 +18,6 @@ class Game(object):
         self.isPaused = False
 
         self.world = World()
-        self.world.init()
 
         self.showGroups = False
 
