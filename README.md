@@ -338,7 +338,14 @@ pip install -r requirements.txt
 
 ## 參考資料
 
-> [Coding Adventure: Simulating an Ecosystem](https://www.youtube.com/watch?v=r_It_X7v-1E&t=160s)
+- [Coding Adventure: Simulating an Ecosystem](https://www.youtube.com/watch?v=r_It_X7v-1E&t=160s)
 
-> [Making maps with noise functions](https://www.redblobgames.com/maps/terrain-from-noise/)
+- [Making maps with noise functions](https://www.redblobgames.com/maps/terrain-from-noise/)
 
+- [Perlin Noise wiki](https://en.wikipedia.org/wiki/Perlin_noise)
+
+- [牧草素材連結](https://bowpixel.itch.io/low-grass-set)
+
+- [動物素材連結](https://deepdivegamestudio.itch.io/animalassetpack)
+
+- [地形素材連結](https://merchant-shade.itch.io/16x16-mini-world-sprites)
