@@ -35,7 +35,7 @@ class Tileset(object):
     def getTileImage(self, tileType):
         return self.tileImages[tileType]
 
-class Tilemap(object):
+class Terrains(object):
     def __init__(self, width, height):
         self.width, self.height = width, height
 

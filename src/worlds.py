@@ -1,13 +1,13 @@
 from constants import *
 from misc import Timer
 from flocks import GrassFlock, SheepFlock, WolfFlock
-from tilemap import Tilemap
+from tilemap import Terrains
 from tools import debug
 
 class World(object):
     def __init__(self):
         self.timer = Timer(TIME_INTERVAL)
-        self.terrains = Tilemap(MAP_WIDTH // TILE_SIZE, MAP_HEIGHT // TILE_SIZE)
+        self.terrains = Terrains(MAP_WIDTH // TILE_SIZE, MAP_HEIGHT // TILE_SIZE)
 
         self.sheep = SheepFlock()
         self.wolfs = WolfFlock()
@@ -15,7 +15,7 @@ class World(object):
 
     def init(self):
         self.timer = Timer(TIME_INTERVAL)
-        self.terrains = Tilemap(MAP_WIDTH // TILE_SIZE, MAP_HEIGHT // TILE_SIZE)
+        self.terrains = Terrains(MAP_WIDTH // TILE_SIZE, MAP_HEIGHT // TILE_SIZE)
         self.sheep = SheepFlock()
         self.wolfs = WolfFlock()
         self.grass = GrassFlock(self.terrains.grassCoords)
@@ -24,9 +24,7 @@ class World(object):
         self.updateTimeInterval()
         self.sheep.update(self.grass.flock, self.wolfs.flock, self.terrains)
         self.wolfs.update(self.sheep.flock, self.terrains)
-
-        if self.timer.time % GRASS_GROWING_TIME == 0:
-            self.grass.randSpawn(1)
+        self.grass.update(self.timer)
     
         self.timer.update()
 

@@ -52,7 +52,7 @@ class SheepFlock(Flock):
                 sheep.infoLabel.draw(screen)
             sheep.infoLabel.drawInfo(screen)
   
-    def randSpawn(self, num):
+    def randAdds(self, num):
         for _ in range(num):
             x = random.randint(0, MAP_WIDTH - TILE_SIZE)
             y = random.randint(0, MAP_HEIGHT - TILE_SIZE)
@@ -76,28 +76,34 @@ class WolfFlock(Flock):
             wolf.draw(screen)
             if self.showInfo:
                 wolf.infoLabel.draw(screen)
+            wolf.infoLabel.drawInfo(screen)
 
-    def randSpawn(self, num):
+    def randAdds(self, num):
         for _ in range(num):
             x = random.randint(0, MAP_WIDTH - TILE_SIZE)
             y = random.randint(0, MAP_HEIGHT - TILE_SIZE)
             self.flock.add(Wolf(x, y))
 
 class GrassFlock(Flock):
-    def __init__(self, grassCoords):
+    def __init__(self, grassCoords, growingTime=GRASS_GROWING_TIME):
         super().__init__()
         self.grassCoords = grassCoords
-        self.timeCounter = 0
+        self.growingTime = growingTime
+        self.newNum = 1
 
-    def update(self):
-        pass
+    def add(self, x, y):
+        self.flock.add(Grass(x, y))
 
-    def randSpawn(self, num):
+    def update(self, timerTime):
+        if timerTime.time % self.growingTime == 0:
+            self.randAdds(self.newNum)
+
+    def randAdds(self, num):
         while num:
             x, y = random.choice(self.grassCoords)
-            spwanX = x * TILE_SIZE + self.offset[0]
-            spwanY = y * TILE_SIZE + self.offset[1]
-            self.flock.add(Grass(spwanX, spwanY))
+            newX = x * TILE_SIZE + self.offset[0]
+            newY = y * TILE_SIZE + self.offset[1]
+            self.add(newX, newY)
             num -= 1
 
     def draw(self, screen):

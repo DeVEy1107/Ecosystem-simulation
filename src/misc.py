@@ -58,27 +58,29 @@ class SpriteAnimaition(object):
             )
 
 class SpriteInfoLabel(object):
-    def __init__(self, sprite, fontSize=20):
+    def __init__(self, sprite, fontSize=30):
         self.sprite = sprite
         self.font = pygame.font.Font(None, fontSize)
         self.textSurface = pygame.Surface((60, 60), pygame.SRCALPHA)
 
     def update(self):
-        msg = "Velocity: {} \nHungerLevel: {} \nMatingDesireLevel: {} \nTotalEaten: {}".format(
-            self.sprite.speed, self.sprite.property.hungerLevel, 
-            self.sprite.property.matingDesireLevel, self.sprite.totalEaten
+        msg = "HungerLevel: {:.1f}/100 \nMatingDesireLevel: {:.1f}/100 \nVelocity: {:.1f}".format(
+            self.sprite.property.hungerLevel, self.sprite.property.matingDesireLevel,
+            self.sprite.speed
         )
         self.textSurface = self.font.render(msg, True, (0, 0, 255))
 
     def draw(self, screen):
-        self.drawBBox(screen)
         self.drawInteractiveRange(screen)
         self.drawDetectionRange(screen)
-        screen.blit(self.textSurface, (self.sprite.rect.x, self.sprite.rect.y - 60))
-
-    def drawInfo(self, screen):
+        
+    def drawInfo(self, screen): 
         if self.isMouseOver():
-            screen.blit(self.textSurface, (self.sprite.rect.x, self.sprite.rect.y - 60))
+            self.drawBBox(screen)
+            screen.blit(
+                self.textSurface, 
+                (self.sprite.rect.x, self.sprite.rect.y - 70)
+            )
 
     def drawDetectionRange(self, screen):
         pygame.draw.circle(
