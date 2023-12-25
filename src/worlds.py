@@ -49,7 +49,8 @@ class World(object):
         self.timer.timeInterval = timeInterval
 
     def drawWorldInfo(self):
-        msg = f"World time: {self.timer.time}\n" + \
+        msg = "===============\n" + \
+              f"World time: {self.timer.time}\n" + \
               f"Time interval: {self.timer.timeInterval:.0f}\n" + \
                "===============\n" + \
               f"Sheep: {len(self.sheep)}\n" + \
