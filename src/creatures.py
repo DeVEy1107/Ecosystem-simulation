@@ -187,10 +187,8 @@ class Sheep(Creature):
         super().__init__(x, y, SHEEP_IMAGE_PATH)
 
         self.property = Property(
-            hungerLevel=100, 
-            speed=2,
-            detectionRange=100,
-            towardFoodSpeed=2.5
+            speed=SHEEP_SPEED,
+            detectionRange=SHEEP_DETECTION_RANGE
         )
         
     def escape(self, predators):
@@ -225,10 +223,9 @@ class Wolf(Creature):
         super().__init__(x, y, WOLF_IMAGE_PATH)
 
         self.property = Property(
-            hungerLevel=1000,
-            speed=4,
-            detectionRange=180,
-            towardFoodSpeed=4
+            speed=WOLF_SPEED,
+            detectionRange=WOLF_DETECTION_RANGE,
+            towardFoodSpeed=WOLF_TOWARD_FOOD_SPEED
         )
     
     def update(self, foods, mates, terrains):

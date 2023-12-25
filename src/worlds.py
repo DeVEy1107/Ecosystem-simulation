@@ -48,7 +48,12 @@ class World(object):
     def setTimeInterval(self, timeInterval):
         self.timer.timeInterval = timeInterval
 
-    def drawFlocksCount(self):
-        msg = f"sheeps: {len(self.sheep.flock)} \nWolfs: {len(self.wolfs.flock)} \nFoods: {len(self.grass.flock)}"
-        msg = msg + f" \nTime interval: {self.timer.timeInterval} \n World time: {self.timer.time}"
+    def drawWorldInfo(self):
+        msg = f"World time: {self.timer.time}\n" + \
+              f"Time interval: {self.timer.timeInterval:.0f}\n" + \
+               "===============\n" + \
+              f"sheeps: {len(self.sheep)}\n" + \
+              f"Wolfs: {len(self.wolfs)}\n" + \
+              f"Foods: {len(self.grass)}\n"
+              
         debug(msg)

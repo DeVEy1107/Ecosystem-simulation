@@ -23,6 +23,9 @@ class Flock(object):
         for sprite in self.flock:
             sprite.timer.setTimeInterval(timeInterval)
 
+    def __len__(self):
+        return len(self.flock)
+
     def update(self, *args, **kwargs):
         pass
 
@@ -31,6 +34,8 @@ class Flock(object):
 
     def add(self, *args, **kwargs):
         pass
+
+    
 
 class SheepFlock(Flock):
     def __init__(self):

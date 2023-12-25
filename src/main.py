@@ -42,10 +42,10 @@ class Game(object):
                     self.showFlocks = not self.showFlocks
                 if event.key == pygame.K_z:
                     if self.world.timer.timeInterval > 1:
-                        self.world.timer.timeInterval -= 1 
+                        self.world.timer.timeInterval /= 2 
                 if event.key == pygame.K_x:
-                    if self.world.timer.timeInterval <= 30:
-                        self.world.timer.timeInterval += 1 
+                    if self.world.timer.timeInterval < 32:
+                        self.world.timer.timeInterval *= 2
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouseKeys = pygame.mouse.get_pressed()
@@ -79,7 +79,7 @@ class Game(object):
             
             self.draw(self.screen)
             if self.showFlocks:
-                self.world.drawFlocksCount()
+                self.world.drawWorldInfo()
             self.clock.tick(FPS)
 
             pygame.display.flip()

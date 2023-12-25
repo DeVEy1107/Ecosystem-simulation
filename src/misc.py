@@ -58,10 +58,14 @@ class SpriteAnimaition(object):
             )
 
 class SpriteInfoLabel(object):
-    def __init__(self, sprite, fontSize=30):
+    def __init__(self, sprite):
         self.sprite = sprite
-        self.font = pygame.font.Font(None, fontSize)
+        self.font = pygame.font.Font(None, 30)
+        self.font2 = pygame.font.Font(None, 30)
         self.textSurface = pygame.Surface((60, 60), pygame.SRCALPHA)
+        # self.detailTextEmbeddedSurface = pygame.Surface((180, 200), pygame.SRCALPHA)
+        self.detailTextSurface = pygame.Surface((60, 60), pygame.SRCALPHA)
+        # self.detailTextEmbeddedSurface.fill((169, 169, 169))
 
     def update(self):
         msg = "HungerLevel: {:.1f}/100 \nMatingDesireLevel: {:.1f}/100 \nVelocity: {:.1f}".format(
@@ -69,6 +73,14 @@ class SpriteInfoLabel(object):
             self.sprite.speed
         )
         self.textSurface = self.font.render(msg, True, (0, 0, 255))
+        
+        msg = f"HungerSpeed: {self.sprite.property.hungerSpeed:.3f}\n" + \
+              f"MatingDesireSpeed: {self.sprite.property.matingDesireSpeed:.3f}\n" + \
+              f"Speed: {self.sprite.property.speed:.3f}\n" + \
+              f"DetectionRange: {self.sprite.property.detectionRange:.1f}\n" + \
+              f"InteractiveRange: {self.sprite.property.interactiveRange:.1f}\n" + \
+              f"TowarfFoodSpeed: {self.sprite.property.towarfFoodSpeed:.3f}\n"
+        self.detailTextSurface = self.font2.render(msg, True, (255, 255, 255), (169, 169, 169))
 
     def draw(self, screen):
         self.drawInteractiveRange(screen)
@@ -77,10 +89,10 @@ class SpriteInfoLabel(object):
     def drawInfo(self, screen): 
         if self.isMouseOver():
             self.drawBBox(screen)
-            screen.blit(
-                self.textSurface, 
-                (self.sprite.rect.x, self.sprite.rect.y - 70)
-            )
+            screen.blit(self.textSurface, (self.sprite.rect.x, self.sprite.rect.y - 70))
+            x, _ = screen.get_size()
+            screen.blit(self.detailTextSurface, (x - 280, 20))
+
 
     def drawDetectionRange(self, screen):
         pygame.draw.circle(
