@@ -84,7 +84,7 @@ class Creature(pygame.sprite.Sprite):
         self.changeDirectionTimer -= 1
         if self.changeDirectionTimer <= 0:
             self.direction = Vector2(random.uniform(-1, 1), random.uniform(-1, 1)).normalize()
-            self.changeDirectionTimer = random.randint(10, 30) 
+            self.changeDirectionTimer = random.randint(30, 50) 
             self.speed = self.property.speed
         
     def reproduce(self, mates):
@@ -158,7 +158,7 @@ class Creature(pygame.sprite.Sprite):
 class Grass(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.property = Property(foodAmount=5)
+        self.property = Property(foodAmount=GRASS_FOOD_AMOUNT)
         self.spriteSheet = SpriteSheet(GRASS_IMAGE_PATH)
         self.image = self.spriteSheet.imageAt((80, 112, 16, 16))
         self.image = pygame.transform.scale(self.image, (int(TILE_SIZE), int(TILE_SIZE)))

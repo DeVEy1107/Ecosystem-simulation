@@ -52,8 +52,8 @@ class World(object):
         msg = f"World time: {self.timer.time}\n" + \
               f"Time interval: {self.timer.timeInterval:.0f}\n" + \
                "===============\n" + \
-              f"sheeps: {len(self.sheep)}\n" + \
+              f"Sheep: {len(self.sheep)}\n" + \
               f"Wolfs: {len(self.wolfs)}\n" + \
-              f"Foods: {len(self.grass)}\n"
+              f"Grass: {len(self.grass)}\n"
               
         debug(msg)

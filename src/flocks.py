@@ -90,11 +90,11 @@ class WolfFlock(Flock):
             self.flock.add(Wolf(x, y))
 
 class GrassFlock(Flock):
-    def __init__(self, grassCoords, growingTime=GRASS_GROWING_TIME):
+    def __init__(self, grassCoords):
         super().__init__()
         self.grassCoords = grassCoords
-        self.growingTime = growingTime
-        self.newNum = 1
+        self.growingTime = GRASS_GROWING_TIME
+        self.newNum = GRASS_GROWING_NUM
 
     def add(self, x, y):
         self.flock.add(Grass(x, y))
