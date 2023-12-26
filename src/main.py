@@ -20,7 +20,7 @@ class Game(object):
 
         self.world = World()
 
-        self.showFlocks = False
+        self.showWorldInfo = False
 
     def processEvents(self):
         for event in pygame.event.get():
@@ -39,7 +39,7 @@ class Game(object):
                 if event.key == pygame.K_r:
                     self.world.init()
                 if event.key == pygame.K_TAB:
-                    self.showFlocks = not self.showFlocks
+                    self.showWorldInfo = not self.showWorldInfo
                 if event.key == pygame.K_z:
                     if self.world.timer.timeInterval > 1:
                         self.world.timer.timeInterval /= 2 
@@ -78,7 +78,7 @@ class Game(object):
                 self.update()
             
             self.draw(self.screen)
-            if self.showFlocks:
+            if self.showWorldInfo:
                 self.world.drawWorldInfo()
             self.clock.tick(FPS)
 

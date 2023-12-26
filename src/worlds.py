@@ -49,6 +49,9 @@ class World(object):
         self.timer.timeInterval = timeInterval
 
     def drawWorldInfo(self):
+        '''
+            顯示世界時間, 更新時間間隔, 生物數量
+        '''
         msg = "===============\n" + \
               f"World time: {self.timer.time}\n" + \
               f"Time interval: {self.timer.timeInterval:.0f}\n" + \

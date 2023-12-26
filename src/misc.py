@@ -20,6 +20,9 @@ class Timer(object):
         return bool(self.absTime % self.timeInterval == 0)
 
 class SpriteSheet(object):
+    '''
+        儲存及提取sprite或tileset圖片素材的工具
+    '''
     def __init__(self, filePath):
         self.sheet = pygame.image.load(filePath)
 
@@ -31,6 +34,9 @@ class SpriteSheet(object):
         return image
 
 class SpriteAnimaition(object):
+    '''
+        用來執行sprite角色動畫的類別
+    '''
     def __init__(self, filepath, size):
         self.sprites = SpriteSheet(filepath)
         self.images = [self.sprites.imageAt((16*i, 0, 16, 16)) for i in range(4)]
@@ -58,14 +64,15 @@ class SpriteAnimaition(object):
             )
 
 class SpriteInfoLabel(object):
+    '''
+        用來顯示生物相關資訊的類別
+    '''
     def __init__(self, sprite):
         self.sprite = sprite
         self.font = pygame.font.Font(None, 30)
         self.font2 = pygame.font.Font(None, 30)
         self.textSurface = pygame.Surface((60, 60), pygame.SRCALPHA)
-        # self.detailTextEmbeddedSurface = pygame.Surface((180, 200), pygame.SRCALPHA)
         self.detailTextSurface = pygame.Surface((60, 60), pygame.SRCALPHA)
-        # self.detailTextEmbeddedSurface.fill((169, 169, 169))
 
     def update(self):
         msg = "HungerLevel: {:.1f}/100 \nMatingDesireLevel: {:.1f}/100 \nVelocity: {:.1f}".format(

@@ -8,6 +8,9 @@ from constants import *
 from misc import Timer, SpriteSheet, SpriteAnimaition, SpriteInfoLabel
 
 class Property(object):
+    '''
+        作為生物相關特性的參數類別
+    '''
     def __init__(self, 
                  hungerLevel=HUNGER_LEVEL, 
                  hungerSpeed=HUNGER_SPEED,
@@ -74,6 +77,9 @@ class Creature(pygame.sprite.Sprite):
         self.infoLabel = SpriteInfoLabel(self)
 
     def getDirection(self, position1, position2):
+        '''
+            取得一點位朝另一個點位的單位方向向量, 並避免產生零方向向量的錯誤
+        '''
         distance = position1.distance_to(position2)
         if distance == 0:
             return Vector2(0, 0)
@@ -130,6 +136,9 @@ class Creature(pygame.sprite.Sprite):
                 self.speed = 0.75 * self.property.speed
 
     def limits(self, x0, y0):
+        '''
+            防止角色超出地圖邊界
+        '''
         self.rect.x = max(x0, min(self.rect.x, MAP_WIDTH + x0 - int(self.size)))
         self.rect.y = max(y0, min(self.rect.y, MAP_HEIGHT + y0 - int(self.size)))   
 
@@ -167,7 +176,7 @@ class Grass(pygame.sprite.Sprite):
         self.timer = Timer(TIME_INTERVAL)
 
     def update(self):
-        if self.timer.time % 30 == 0:
+        if self.timer.time % GRASS_DIED_TIME == 0:
             self.kill()
         self.timer.update()
 

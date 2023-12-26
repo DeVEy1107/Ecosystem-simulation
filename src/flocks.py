@@ -5,6 +5,9 @@ from constants import *
 from creatures import Grass, Sheep, Wolf
 
 class Flock(object):
+    '''
+        用來管理及儲存生物群體的類別
+    '''
     def __init__(self):
         self.flock = pygame.sprite.Group()
         self.offset = [0, 0]
