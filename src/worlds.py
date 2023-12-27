@@ -21,12 +21,12 @@ class World(object):
         self.grass = GrassFlock(self.terrains.grassCoords)
 
     def update(self):
-        self.updateTimeInterval()
+        self.timer.update()
         self.sheep.update(self.grass.flock, self.wolfs.flock, self.terrains)
         self.wolfs.update(self.sheep.flock, self.terrains)
         self.grass.update(self.timer)
-    
-        self.timer.update()
+
+        self.updateTimeInterval()
 
     def draw(self, screen):
         self.terrains.draw(screen)

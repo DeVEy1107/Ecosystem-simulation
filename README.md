@@ -324,7 +324,7 @@ Creature <|-- Wolf
 pip install -r requirements.txt
 ```
 
-執行src資料中的main.py
+執行src/main.py
 
 ## 操作方式
 執行遊戲後可按下P鍵暫停遊戲來進行布局。
