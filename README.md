@@ -93,11 +93,16 @@ class Timer{
 
 下面是視覺化柏林噪聲產生的二維陣列
 
-<img src=images/readme/perlinNoise2d.png alt="Description" width="50%">
+<div style="text-align: center;">
+  <img src=images/readme/perlinNoise2d.png alt="Description" width="25%">
+</div>
 <!-- ![](images/readme/perlinNoise2d.png) -->
 
 而這一個是立體空間中的柏林噪聲生成的圖形，外觀就像現實中的地形圖一樣。
 
+<div style="text-align: center;">
+  <img src=images/readme/perlinNoise3d.png alt="Description" width="25%">
+</div>
 ![](images/readme/perlinNoise3d.png)
 
 在實作的部份，我使用python提供的套件"perlin_noise"來實現柏林噪聲的功能。
