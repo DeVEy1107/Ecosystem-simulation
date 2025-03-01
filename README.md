@@ -177,14 +177,16 @@ class Creature{
 
 首先，定義的生物類別中的重要參數如下：
 
-- hungerLevel: 生物的飢餓值，會隨著時間而降低，低於0時生物死亡 
-- hungerSpeed: 飢餓值隨時間改變的變化量
-- matingDesireLevel: 繁殖衝動水平的量值，隨時間增加，達到閾值時可以進行繁殖
-- matingDesireSpeed: matingDesireLevel的增長隨時間增加的變化量
-- speed: 生物的移動速度
-- detectionRange: 偵測週邊生物的範圍
-- interactiveRange: 開始進行覓食、繁殖的互動範圍
-- towarfFoodSpeed: 朝向食物的移動速度
+| Parameter             | Description                                                  |
+|-----------------------|--------------------------------------------------------------|
+| `hungerLevel`          | 生物的飢餓值，會隨著時間而降低，低於0時生物死亡                         |
+| `hungerSpeed`          | 飢餓值隨時間改變的變化量                                          |
+| `matingDesireLevel`    | 繁殖衝動水平的量值，隨時間增加，達到閾值時可以進行繁殖                     |
+| `matingDesireSpeed`    | matingDesireLevel的增長隨時間增加的變化量                          |
+| `speed`                | 生物的移動速度                                                 |
+| `detectionRange`       | 偵測週邊生物的範圍                                               |
+| `interactiveRange`     | 開始進行覓食、繁殖的互動範圍                                      |
+| `towarfFoodSpeed`      | 朝向食物的移動速度                                               |
 
 以下是程式實作時的物件。
 
