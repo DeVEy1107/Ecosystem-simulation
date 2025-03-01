@@ -93,7 +93,8 @@ class Timer{
 
 下面是視覺化柏林噪聲產生的二維陣列
 
-![](images/readme/perlinNoise2d.png)
+<img src=images/readme/perlinNoise2d.png alt="Description" width="50%">
+<!-- ![](images/readme/perlinNoise2d.png) -->
 
 而這一個是立體空間中的柏林噪聲生成的圖形，外觀就像現實中的地形圖一樣。
 
